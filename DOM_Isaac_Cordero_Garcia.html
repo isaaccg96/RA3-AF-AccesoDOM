@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="tituloPrincipal">Titulo</h1>
+    <p id="mensajeBienvenida">Bienvenido a nuestro gestor interactivo de tareas <span id="nombreUsuario"></span></p> 
+
+    <form id="miFormulario">
+        <input type="text" id="inputNombre">
+        <button type="submit" id="btnActualizarNombre">Actualizar</button>
+    </form>
+
+    <select id="colorUsuario">
+        <option value="red">Rojo</option>
+        <option value="green">Verde</option>
+        <option value="blue">Azul</option>
+        <option value="yellow">Amarillo</option>
+    </select>
+
+    <ul id="listaTareas">
+        <li>Tarea 1</li>
+        <li>Tarea 2</li>
+        <li>Tarea 3</li>
+    </ul>
+    <input type="text" id="inputTarea">
+    <button id="btnAgregarTarea">Agregar</button>
+    
+
+    <div class="cuadroInfo">Pasa el ratón aquí para cambiar el color</div>
+    <div class="cuadroInfo">Haz doble clic para ocultarme</div>
+    <div id="galeria">
+        <img class="imagenGaleria" src="https://i.pinimg.com/236x/f1/64/7e/f1647e873db2d4d7f7cf54a837d87a47.jpg" alt="Gatito">
+        <img class="imagenGaleria" src="https://i.pinimg.com/236x/f1/64/7e/f1647e873db2d4d7f7cf54a837d87a47.jpg" alt="Gatito">
+        <img class="imagenGaleria" src="https://i.pinimg.com/236x/f1/64/7e/f1647e873db2d4d7f7cf54a837d87a47.jpg" alt="Gatito">
+    </div>
+    <button id="btnOcultarTareas">Ocultar tareas</button>
+    <button id="btnAlternarTema">Alternar tema</button>
+
+    <script>
+        //Aseguramos que tenemos cargado todo el contenido de la página
+        document.addEventListener("DOMContentLoaded", function() {
+            //Cambio de título
+            const tituloPrincipal = document.getElementById("tituloPrincipal");
+            tituloPrincipal.textContent = "Bienvenido al gestor interactivo de tareas";
+
+            //Actualizar el nombre de usuario / mensaje de bienvenida
+            document.getElementById("miFormulario").addEventListener("submit", function(event) {
+                event.preventDefault(); //Evita que se recargue la página            
+                const nombre = document.getElementById("inputNombre").value;
+                const nombreSpan = document.getElementById("nombreUsuario");
+                const mensajeBienvenida = document.getElementById("mensajeBienvenida");
+
+                if (nombre) {
+                    nombreSpan.textContent = nombre;
+                    mensajeBienvenida.textContent = "Bienvenido, ";
+                    mensajeBienvenida.appendChild(nombreSpan);
+                }              
+            });
+
+            //Cambiar el color del nombre
+            const selector = document.getElementById("colorUsuario");
+            selector.addEventListener("change", function() {
+                const nombreSpan = document.getElementById("nombreUsuario");
+                nombreSpan.style.color = selector.value;
+            });
+
+            //Añadir tareas junto al botón para eliminarlas
+            const btnAgregarTarea = document.getElementById("btnAgregarTarea");
+            const inputTarea = document.getElementById("inputTarea");
+            const listaTareas = document.getElementById("listaTareas");
+            btnAgregarTarea.addEventListener("click", function() {
+                const tareaTexto = inputTarea.value;
+                if (tareaTexto) {
+                    //Creamos el elemento <li> con su texto
+                    const nuevoElemento = document.createElement("li");
+                    nuevoElemento.textContent = tareaTexto;
+                    //Creamos el botón con su texto
+                    const nuevoBoton = document.createElement("button");
+                    nuevoBoton.textContent = "Eliminar";
+                    //Evento para que el botón elimine
+                    nuevoBoton.addEventListener("click", function() {
+                        nuevoElemento.remove();
+                    });
+                    //Agregamos el botón a la <li> y la <li> a la lista
+                    nuevoElemento.appendChild(nuevoBoton);
+                    listaTareas.appendChild(nuevoElemento);
+                    //Limpiamos el cuadro de texto
+                    inputTarea.value = "";
+                } else {
+                    alert("No se ha ingresado ninguna tarea");
+                }
+            });
+
+            //Mouseover, mouseout, dblclick
+            const cuadrosInfo = document.querySelectorAll(".cuadroInfo"); //Obtenemos un Array con los cuadros
+            cuadrosInfo.forEach((cuadro, index) => {
+                //Cambiar color de fondo al pasar el  ratón
+                cuadro.addEventListener("mouseover", () => {
+                    cuadro.style.backgroundColor = "lightblue";
+                });
+
+                //Volver al color original
+                cuadro.addEventListener("mouseout", () => {
+                    cuadro.style.backgroundColor = "";
+                });
+
+                //Ocultar el segundo cuadro al hacer doble clic
+                if (index === 1) {
+                    cuadro.addEventListener("dblclick", () => {
+                        cuadro.style.display = "none";
+                    });
+                }
+            });
+
+            //Modificar el tamaño de las imágenes
+            const imagenesGaleria = document.querySelectorAll(".imagenGaleria"); //Obtenemos un Array con las imágenes
+            imagenesGaleria.forEach(imagen => { //Recorremos el Array con forEach para aplicarle a cada una el evento
+                imagen.addEventListener("click", function() {
+                    //Cambio de tamaño
+                    if (imagen.style.width === "300px") {
+                        imagen.style.width = "100px";
+                    } else {
+                        imagen.style.width = "300px";
+                    }
+                });
+            });
+
+            //Alternar entre mostrar u ocultar la lista de tareas completa
+            const btnOcultarTareas = document.getElementById("btnOcultarTareas");
+            btnOcultarTareas.addEventListener("click", function() {
+                const listaTareas = document.getElementById("listaTareas");
+
+                //Alternar entre mostrar y ocultar la lista
+                if (listaTareas.style.display === "none") {
+                    listaTareas.style.display = "block"; //Mostrar la lista
+                } else {
+                    listaTareas.style.display = "none"; //Ocultar la lista
+                }
+            });
+
+            //Alternar entre un tema claro y oscuro
+            const btnAlternarTema = document.getElementById("btnAlternarTema");
+            btnAlternarTema.addEventListener("click", function() {
+                const body = document.body;
+                //Cambiar el color de fondo y del texto
+                if (body.style.backgroundColor === "white") {
+                    body.style.backgroundColor = "#333";  //Establecer el color de fondo oscuro
+                    body.style.color = "white";  //Establecer el texto blanco
+                } else {
+                    body.style.backgroundColor = "white"; //Establecer el color de fondo claro
+                    body.style.color = "black";  //Establecer el texto negro
+                }
+            });
+        });
+    </script>
+</body>
+</html>
